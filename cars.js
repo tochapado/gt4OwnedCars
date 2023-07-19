@@ -8,12 +8,6 @@ function owned(e) {
 }
 function saveToCookies(i) {
   document.cookie = `${i}=; expires=Fri, 01 Jan 2337 00:00:00 GMT; path=/`;
-  // fillPopUp();
-}
-function fillPopUp() {
-  if(cookies.length >= 1 && cookies[0] !== '') {
-    $('#total-cars').textContent = `${cookies.length} cars owned`;
-  }
 }
 
 const carList = `AC Cars 427 S/C 1966
@@ -738,8 +732,6 @@ Volvo 240 GLT Estate 1988
 Volvo S60 T 5 Sport 2003
 SILEIGHTY 1998`;
 
-const cookies = document.cookie.split('; ');
-
 const cars = carList.split('\n');
 
 for(let i = 0; i < cars.length; i++) {
@@ -751,12 +743,14 @@ for(let i = 0; i < cars.length; i++) {
   div.addEventListener('click', function(e) {
     owned(e);
     saveToCookies(i);
+    loadCookies();
   });
 
   $('#cars').appendChild(div);
 }
 
 function loadCookies() {
+  const cookies = document.cookie.split('; ');
 
   for(let i = 0; i < cars.length; i++) {
     for(let j = 0; j < cookies.length; j++) {
@@ -764,7 +758,9 @@ function loadCookies() {
         $('#cars').childNodes[i].dataset.owned = 'yep';
     }
   }
-  fillPopUp();
+  if(cookies.length >= 1 && cookies[0] !== '') {
+    $('#total-cars').textContent = `${cookies.length} cars owned`;
+  }
 }
 
 loadCookies();
