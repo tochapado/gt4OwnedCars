@@ -10,11 +10,11 @@ function saveToCookies(i) {
   document.cookie = `${i}=; expires=Fri, 01 Jan 2337 00:00:00 GMT; path=/`;
   // fillPopUp();
 }
-// function fillPopUp() {
-//   if(cookies.length >= 1 && cookies[0] !== '') {
-//     $('#total-cars').textContent = `${cookies.length} cars owned`;
-//   }
-// }
+function fillPopUp() {
+  if(cookies.length >= 1 && cookies[0] !== '') {
+    $('#total-cars').textContent = `${cookies.length} cars owned`;
+  }
+}
 
 const carList = `AC Cars 427 S/C 1966
 Acura CL 3.2 Type-S 2001
@@ -751,7 +751,6 @@ for(let i = 0; i < cars.length; i++) {
   div.addEventListener('click', function(e) {
     owned(e);
     saveToCookies(i);
-    loadCookies();
   });
 
   $('#cars').appendChild(div);
@@ -761,11 +760,11 @@ function loadCookies() {
 
   for(let i = 0; i < cars.length; i++) {
     for(let j = 0; j < cookies.length; j++) {
-      if(i.toString() === cookies[j].charAt(0)) 
+      if(i.toString() === cookies[j].substring(0, cookies[j].length - 1)) 
         $('#cars').childNodes[i].dataset.owned = 'yep';
     }
   }
-  // fillPopUp();
+  fillPopUp();
 }
 
 loadCookies();
