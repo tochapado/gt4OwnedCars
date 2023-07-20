@@ -2,12 +2,18 @@ function $(value) {
   return document.querySelector(value);
 }
 function owned(e) {
-  if(e.target.dataset.owned === 'nope') {
-    e.target.dataset.owned = 'yep';
-  }
+  if(e.target.dataset.owned === 'nope') e.target.dataset.owned = 'yep';
 }
-function saveToCookies(i) {
-  document.cookie = `${i}=; expires=Fri, 01 Jan 2337 00:00:00 GMT; path=/`;
+function notOwned(e) {
+  e.target.parentElement.dataset.owned = 'nope';
+}
+function saveToStorage(i) {
+  if(localStorage.getItem(i) !== null) return;
+  localStorage.setItem(i, i);
+}
+function removeFromStorage(i) {
+  localStorage.removeItem(i);
+  console.log(localStorage)
 }
 
 const carList = `AC Cars 427 S/C 1966
@@ -736,31 +742,38 @@ const cars = carList.split('\n');
 
 for(let i = 0; i < cars.length; i++) {
   const div = document.createElement('div');
-
+  const exclude = document.createElement('div');
+  
   div.classList = 'cars';
   div.textContent = cars[i];
   div.dataset.owned = 'nope';
   div.addEventListener('click', function(e) {
     owned(e);
-    saveToCookies(i);
-    loadCookies();
+    saveToStorage(i);
+    loadStorage();
   });
+  
+  // exclude.classList = 'exclude';
+  // exclude.textContent = 'X';
+  // exclude.addEventListener('click', function(e) {
+  //   notOwned(e);
+  //   removeFromStorage(i);
+  //   loadStorage();
+  // });
+  
+  div.appendChild(exclude);
 
   $('#cars').appendChild(div);
 }
 
-function loadCookies() {
-  const cookies = document.cookie.split('; ');
-
+function loadStorage() {
   for(let i = 0; i < cars.length; i++) {
-    for(let j = 0; j < cookies.length; j++) {
-      if(i.toString() === cookies[j].substring(0, cookies[j].length - 1)) 
+    for(let j = 0; j < localStorage.length; j++) {
+      if(i.toString() === localStorage.getItem(i)) {
         $('#cars').childNodes[i].dataset.owned = 'yep';
+      }
     }
   }
-  if(cookies.length >= 1 && cookies[0] !== '') {
-    $('#total-cars').textContent = `${cookies.length} cars owned`;
-  }
+  $('#total-cars').textContent = `${localStorage.length} cars owned`;
 }
-
-loadCookies();
+loadStorage();
